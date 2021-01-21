@@ -7,7 +7,7 @@ const DetailedPokemon=({ match }: RouteComponentProps<TParams>)=>{
     return(
         <div className="DetailedPokemon">
             <p>DetailedPokemon</p>
-            <h2>This is a page for product with ID: {match.params.id} </h2>
+            <h2>This is a page for pokemon with ID: {match.params.id} </h2>
             <Link to="/">Ir a Pagina principal</Link>
         </div>
     )
