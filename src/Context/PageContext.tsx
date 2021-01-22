@@ -10,9 +10,9 @@ export type PaginationContextType = {
     setPagination: (Pagination: Pagination) => void;
 }
 
-// ThemeContext is an object that we will use to provide a context. Here you declare type associated with this context as <ThemeContextType> and its 
-// default values. These default values are returned to consumers when there is no theme provider.
+// PaginationContext is an object that we will use to provide a context. Here you declare type associated with this context as <PaginationContextType> and its 
+// default values. These default values are returned to consumers when there is no pagination provider.
 export const PaginationContext = createContext<PaginationContextType>({ pagination: {pageOffset:10, pageSelected:1}, setPagination: pagination => console.log("hola")});
 
-// useTheme is a custom hook to make consuming the theme and its setter function more convenient.
+// usePagination is a custom hook to make consuming the pagination and its setter function more convenient.
 export const usePagination = () => useContext(PaginationContext);
