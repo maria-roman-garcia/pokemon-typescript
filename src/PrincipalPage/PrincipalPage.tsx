@@ -12,31 +12,45 @@ const PrincipalPage = () => {
 
     interface IFirstFetch {
         count: number;
-        results: [{name: string; url: string;}]
+        results: [{ name: string; url: string; }]
     }
 
-    interface IPokemonDetailed {
-        abilities: [ ability: { name: string; url: string;}];
+    interface IpokemonDetailed {
+        name: string;
+        url: string;
+        abilities: [ability: { name: string; url: string; }];
         base_experience: number;
-        forms: [{ name: string; url: string;}];
+        forms: [{ name: string; url: string; }];
         height: number;
         id: number;
     }
 
-    type arrayResult = {
-        result: IPokemonDetailed[];
-        setArrayResult: (IPokemonDetailed: IPokemonDetailed) => void;
+    interface IfinalResult {
+        count: number;
+        pokemonResults: IpokemonDetailed[]
     }
 
     useEffect(() => {
         fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${20}&offset=${20 * (pagination.pageSelected - 1)}`)
-        .then((response)=>{ return response.json()})
-        .then((responseJson: IFirstFetch)=>{ 
-            const responsePromises = responseJson.results.map( (e: {name: string; url: string}) => fetch(e.url).then((responsePokemon)=>{return responsePokemon.json()}));
-            Promise.all(responsePromises).then(valuesPromises => {
-                console.log(valuesPromises)
+            .then((response) => { return response.json() })
+            .then((responseJson: IFirstFetch) => {
+                const responsePromises = responseJson.results.map((e: { name: string; url: string }) => fetch(e.url).then((responsePokemon) => { return responsePokemon.json() }));
+                Promise.all(responsePromises).then(valuesPromises => {
+                    const toReturn: IfinalResult = {
+                        count: responseJson.count,
+                        pokemonResults: responseJson.results.map((e, index) => {
+                            return {
+                                ...e,
+                                ...valuesPromises[index]
+                            }
+                        })
+                    }
+                    console.log(toReturn);
+                })
             })
-        });
+            .catch(error => {
+                console.error(error);
+            });
     }, []);
 
     return (
