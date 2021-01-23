@@ -28,14 +28,15 @@ const PrincipalPage = () => {
         setArrayResult: (IPokemonDetailed: IPokemonDetailed) => void;
     }
 
-    const getPokemon = async (): Promise<void> => {
-        const data: Response = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${20}&offset=${20 * (pagination.pageSelected - 1)}`);
-        const responseJson: IFirstFetch = await data.json();
-        console.log(responseJson);
-    }
-
     useEffect(() => {
-        getPokemon();
+        fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${20}&offset=${20 * (pagination.pageSelected - 1)}`)
+        .then((response)=>{ return response.json()})
+        .then((responseJson: IFirstFetch)=>{ 
+            const responsePromises = responseJson.results.map( (e: {name: string; url: string}) => fetch(e.url).then((responsePokemon)=>{return responsePokemon.json()}));
+            Promise.all(responsePromises).then(valuesPromises => {
+                console.log(valuesPromises)
+            })
+        });
     }, []);
 
     return (
