@@ -16,7 +16,7 @@ function AppRouter() {
       <div className="App">
         <Router>
           <Route path="/" exact component={PrincipalPage} />
-          <Route path="/products/:id" component={DetailedPokemon} />
+          <Route path="/pokemonDetailed/:id" component={DetailedPokemon} />
         </Router>
       </div>
     </PaginationContext.Provider>
