@@ -9,7 +9,7 @@ import DetailedPokemon from './DetailedPokemon/DetailedPokemon';
 
 function AppRouter() {
 
-  const [pagination, setPagination] = React.useState({ pageSelected: 1, pageOffset: 10 });
+  const [pagination, setPagination] = React.useState({ pageSelected: 1, pageOffset: 1118 });
 
   return (
     <PaginationContext.Provider value={{ pagination, setPagination }}>
