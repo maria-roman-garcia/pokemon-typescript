@@ -9,11 +9,14 @@ import Experience from '../Commons/Experience';
 //Reactstrap
 import { Spinner } from 'reactstrap';
 import { Table } from 'reactstrap';
+//Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
 
 const PrincipalPage = () => {
 
     //Context
-    const { pagination, setPagination } = usePagination();
+    const { pagination } = usePagination();
 
     interface IFirstFetch {
         count: number;
@@ -23,11 +26,46 @@ const PrincipalPage = () => {
     interface IpokemonDetailed {
         name: string;
         url: string;
-        abilities: [ability: { name: string; url: string; }];
+        abilities: {
+            ability: {
+                name: string;
+                url: string;
+            }
+        }[];
         base_experience: number;
         forms: [{ name: string; url: string; }];
-        height: number;
         id: number;
+        sprites: {
+            back_default: string;
+            back_shiny: string;
+            front_default: string;
+            front_shiny: string;
+            other: {
+                dream_world: {
+                    front_default: string;
+                }
+            }
+        };
+        types: {
+            type: {
+                name: string;
+                url: string;
+            }
+        }[];
+        stats: {
+            base_stat: number;
+            effort: number;
+            stat: {
+                name: string;
+                url: string;
+            }
+        }[];
+        moves: {
+            move: {
+                name: string;
+                url: string;
+            }
+        }[];
     }
 
     interface IfinalResult {
@@ -60,16 +98,25 @@ const PrincipalPage = () => {
             .catch(error => {
                 console.error(error);
             });
-    }, []);
+    }, [pagination.pageSelected]);
 
-    console.log(allPokemons);
+    //icons fontawesome
+    const sortUp = <FontAwesomeIcon icon={faSortUp} color="#454545" size="2x" />
+    const sortDown = <FontAwesomeIcon icon={faSortDown} color="#454545" size="2x" />
+
+    const [showMoves, setShowMoves] = useState<number[]>([]);
+    const addIndexShowMoves = (index: number) => {
+        setShowMoves([...showMoves, index]);
+    }
+    const deleteIndexShowMoves = (index: number) => {
+        const newData = [...showMoves];
+        const toDelete = newData.indexOf(index);
+        newData.splice(toDelete, 1);
+        setShowMoves(newData);
+    }
 
     return (
         <div className="PrincipalPage maxScreenSize">
-            {/* <Menu />
-            <p>PrincipalPage</p>
-            <div id="app"></div>
-            <Link to="/products/2">Go to detailed pokemon 2</Link> */}
             {allPokemons?.loading
                 ? <Spinner color="info" />
                 : <Fragment>
@@ -89,10 +136,10 @@ const PrincipalPage = () => {
                                     <Experience normalRate={false} experience={pokemon.base_experience} />
                                 </div>
                                 <div className="justifyCenter" style={{ marginBottom: "15px" }}>
-                                    {/* <img width="80%" src={pokemon.sprites.other.dream_world.front_default} alt="Card image cap" /> */}
+                                    <img width="80%" src={pokemon.sprites.other.dream_world.front_default} alt="Card image cap" />
                                 </div>
-                                {/* <p><span className="bold">Abilities:</span> {pokemon.abilities.map((e, indexAbilities) => <span key={"indexAbilities_" + indexAbilities} className="ability">{e.ability.name}</span>)}</p> */}
-                                {/* <p><span className="bold">Types:</span> {pokemon.types.map((e, indexType) => <span className="type" key={"type_" + indexType}>{e.type.name}</span>)}</p> */}
+                                <p><span className="bold">Abilities:</span> {pokemon.abilities.map((e, indexAbilities) => <span key={"indexAbilities_" + indexAbilities} className="ability">{e.ability.name}</span>)}</p>
+                                <p><span className="bold">Types:</span> {pokemon.types.map((e, indexType) => <span className="type" key={"type_" + indexType}>{e.type.name}</span>)}</p>
                                 <Table striped bordered>
                                     <thead>
                                         <tr>
@@ -103,17 +150,17 @@ const PrincipalPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {/* {pokemon.stats.map((e, indexPokDetail) =>
+                                        {pokemon.stats.map((e, indexPokDetail) =>
                                             <tr key={"indexPokDetail_" + indexPokDetail}>
                                                 <th scope="row">{indexPokDetail + 1}</th>
                                                 <td>{e.stat.name}</td>
                                                 <td>{e.base_stat}</td>
                                                 <td>{e.effort}</td>
                                             </tr>
-                                        )} */}
+                                        )}
                                     </tbody>
                                 </Table>
-                                {/* <div className="row justifySpaceBeteween alignCenter pointer" onClick={() => showMoves.some(e => e === pokemonIndex) ? deleteIndexShowMoves(pokemonIndex) : addIndexShowMoves(pokemonIndex)}>
+                                <div className="row justifySpaceBeteween alignCenter pointer" onClick={() => showMoves.some(e => e === pokemonIndex) ? deleteIndexShowMoves(pokemonIndex) : addIndexShowMoves(pokemonIndex)}>
                                     <div className="col-6">
                                         <p className="bold">Moves:</p>
                                     </div>
@@ -125,7 +172,7 @@ const PrincipalPage = () => {
                                     {showMoves.some(e => e === pokemonIndex) && pokemon.moves.map((e, indexMove) =>
                                         <p key={indexMove} className="col move">{e.move.name}</p>
                                     )}
-                                </div> */}
+                                </div>
                                 <div className="row button justifyCenter alignCenter">
                                     <Link to={`/pokemonDetailed/${pokemon.id}`} className="widthFit">
                                         <p>See more details</p>
