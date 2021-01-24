@@ -10,69 +10,25 @@ import Experience from '../Commons/Experience';
 import { Spinner } from 'reactstrap';
 import { Table } from 'reactstrap';
 //Icons
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import Icons from '../Commons/Icons';
+//Interfaces
+import IpokemonDetailed from '../interfaces';
+
+interface IFirstFetch {
+    count: number;
+    results: [{ name: string; url: string; }]
+}
+
+interface IfinalResult {
+    count: number;
+    pokemonResults: IpokemonDetailed[];
+    loading: boolean;
+}
 
 const PrincipalPage = () => {
 
     //Context
     const { pagination } = usePagination();
-
-    interface IFirstFetch {
-        count: number;
-        results: [{ name: string; url: string; }]
-    }
-
-    interface IpokemonDetailed {
-        name: string;
-        url: string;
-        abilities: {
-            ability: {
-                name: string;
-                url: string;
-            }
-        }[];
-        base_experience: number;
-        forms: [{ name: string; url: string; }];
-        id: number;
-        sprites: {
-            back_default: string;
-            back_shiny: string;
-            front_default: string;
-            front_shiny: string;
-            other: {
-                dream_world: {
-                    front_default: string;
-                }
-            }
-        };
-        types: {
-            type: {
-                name: string;
-                url: string;
-            }
-        }[];
-        stats: {
-            base_stat: number;
-            effort: number;
-            stat: {
-                name: string;
-                url: string;
-            }
-        }[];
-        moves: {
-            move: {
-                name: string;
-                url: string;
-            }
-        }[];
-    }
-
-    interface IfinalResult {
-        count: number;
-        pokemonResults: IpokemonDetailed[];
-        loading: boolean;
-    }
 
     const [allPokemons, setAllPokemons] = useState<IfinalResult>({ count: 0, pokemonResults: [], loading: true });
 
@@ -100,10 +56,7 @@ const PrincipalPage = () => {
             });
     }, [pagination.pageSelected]);
 
-    //icons fontawesome
-    const sortUp = <FontAwesomeIcon icon={faSortUp} color="#454545" size="2x" />
-    const sortDown = <FontAwesomeIcon icon={faSortDown} color="#454545" size="2x" />
-
+    //Show / Hide pokemon card moves
     const [showMoves, setShowMoves] = useState<number[]>([]);
     const addIndexShowMoves = (index: number) => {
         setShowMoves([...showMoves, index]);
@@ -136,7 +89,7 @@ const PrincipalPage = () => {
                                     <Experience normalRate={false} experience={pokemon.base_experience} />
                                 </div>
                                 <div className="justifyCenter" style={{ marginBottom: "15px" }}>
-                                    <img width="80%" src={pokemon.sprites.other.dream_world.front_default} alt="Card image cap" />
+                                    <img width="80%" src={pokemon.sprites.other.dream_world.front_default} alt="Card cap" />
                                 </div>
                                 <p><span className="bold">Abilities:</span> {pokemon.abilities.map((e, indexAbilities) => <span key={"indexAbilities_" + indexAbilities} className="ability">{e.ability.name}</span>)}</p>
                                 <p><span className="bold">Types:</span> {pokemon.types.map((e, indexType) => <span className="type" key={"type_" + indexType}>{e.type.name}</span>)}</p>
@@ -165,7 +118,7 @@ const PrincipalPage = () => {
                                         <p className="bold">Moves:</p>
                                     </div>
                                     <div className="col-6 justifyEnd">
-                                        <span>{showMoves.some(e => e === pokemonIndex) ? sortDown : sortUp}</span>
+                                        <span>{showMoves.some(e => e === pokemonIndex) ? Icons.sortDown : Icons.sortUp}</span>
                                     </div>
                                 </div>
                                 <div className="row">
